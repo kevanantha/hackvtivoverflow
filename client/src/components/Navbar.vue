@@ -1,18 +1,22 @@
 <template>
   <q-header bordered class="text-black" style="background: #fff">
     <q-toolbar>
-      <q-btn
-        flat
-        dense
-        round
-        @click="leftDrawerOpen = !leftDrawerOpen"
-        aria-label="Menu"
-        icon="menu"
-      />
+      <router-link to="/">
+        <q-btn
+          flat
+          dense
+          round
+          @click="leftDrawerOpen = !leftDrawerOpen"
+          aria-label="Menu"
+          icon="all_inclusive"
+        />
+      </router-link>
 
       <q-toolbar-title>
-        <router-link style="text-decoration: none; color: black" to="/">
-          Stuckoverlow
+        <router-link style="text-decoration: none; color: #3F89E4" to="/">
+          <span style="font-weight: bold">
+            Stuckoverlow
+          </span>
         </router-link>
       </q-toolbar-title>
 
@@ -82,11 +86,7 @@
 
       <div style="margin-left: 0.4rem" class="q-gutter-sm row items-center no-wrap">
         <q-btn v-if="isLogin" no-caps flat>
-          <!-- <q-avatar size="26px"> -->
           {{ name }}
-          <!-- <img src="https://cdn.quasar.dev/img/boy-avatar.png" /> -->
-          <!-- </q-avatar> -->
-          <!-- <q-tooltip>Account</q-tooltip> -->
         </q-btn>
       </div>
     </q-toolbar>

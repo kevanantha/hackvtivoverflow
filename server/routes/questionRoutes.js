@@ -8,5 +8,6 @@ router.use(authentication)
 router.post('/create', QuestionController.create)
 router.delete('/:questionId/delete', authorizationQuestion, QuestionController.delete)
 router.patch('/:questionId/upvote', QuestionController.upvote)
+router.patch('/:questionId/downvote', QuestionController.downvote)
 
 module.exports = router

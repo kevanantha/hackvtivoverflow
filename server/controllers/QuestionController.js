@@ -13,7 +13,7 @@ module.exports = {
     try {
       const question = await Question.findOne({
         _id: req.params.questionId
-      })
+      }).populate('userId')
       res.status(200).json(question)
     } catch (err) {
       next(err)
@@ -37,39 +37,47 @@ module.exports = {
     try {
       const question = await Question.findById(req.params.questionId)
       if (Object.keys(question).length) {
-        if (question.votes.length) {
-          const findVote = question.votes.find(q => q.userId == req.user.id)
-          if (Object.keys(findVote).length) {
-            if (findVote.voteType == 1) {
-              await Question.updateOne(
-                {
-                  _id: req.params.questionId
-                },
-                {
-                  $pull: {
-                    votes: {
-                      userId: req.user.id
-                    }
+        const filterVote = question.votes.filter(q => q.userId == req.user.id)
+        if (filterVote.length) {
+          console.log(filterVote)
+          if (filterVote[0].voteType == 1) {
+            await Question.updateOne(
+              {
+                _id: req.params.questionId
+              },
+              {
+                $pull: {
+                  votes: {
+                    userId: req.user.id
                   }
                 }
-              )
-              res.status(200).json({ message: 'updated, from upvote' })
-            } else if (findVote.voteType == -1) {
-              await Question.updateOne(
-                {
-                  _id: req.params.questionId
-                },
-                {
-                  $push: {
-                    votes: {
-                      userId: req.user.id,
-                      voteType: 1
-                    }
+              }
+            )
+            res.status(200).json({ message: 'updated, from upvote' })
+          } else if (filterVote[0].voteType == -1) {
+            await Question.updateOne(
+              {
+                _id: req.params.questionId
+              },
+              {
+                $pull: {
+                  votes: {
+                    userId: req.user.id
                   }
                 }
-              )
-              res.status(200).json({ message: 'updated, from downvote' })
-            }
+              }
+            )
+            await Question.updateOne(
+              {
+                _id: req.params.questionId
+              },
+              {
+                $push: {
+                  votes: { userId: req.user.id, voteType: 1 }
+                }
+              }
+            )
+            res.status(200).json({ message: 'updated, from downvote' })
           }
         } else {
           await Question.updateOne(
@@ -97,39 +105,47 @@ module.exports = {
     try {
       const question = await Question.findById(req.params.questionId)
       if (Object.keys(question).length) {
-        if (question.votes.length) {
-          const findVote = question.votes.find(q => q.userId == req.user.id)
-          if (Object.keys(findVote).length) {
-            if (findVote.voteType == -1) {
-              await Question.updateOne(
-                {
-                  _id: req.params.questionId
-                },
-                {
-                  $pull: {
-                    votes: {
-                      userId: req.user.id
-                    }
+        const filterVote = question.votes.filter(q => q.userId == req.user.id)
+        if (filterVote.length) {
+          console.log(filterVote)
+          if (filterVote[0].voteType == -1) {
+            await Question.updateOne(
+              {
+                _id: req.params.questionId
+              },
+              {
+                $pull: {
+                  votes: {
+                    userId: req.user.id
                   }
                 }
-              )
-              res.status(200).json({ message: 'updated, from downvote' })
-            } else if (findVote.voteType == 1) {
-              await Question.updateOne(
-                {
-                  _id: req.params.questionId
-                },
-                {
-                  $push: {
-                    votes: {
-                      userId: req.user.id,
-                      voteType: -1
-                    }
+              }
+            )
+            res.status(200).json({ message: 'updated, from downvote' })
+          } else if (filterVote[0].voteType == 1) {
+            await Question.updateOne(
+              {
+                _id: req.params.questionId
+              },
+              {
+                $pull: {
+                  votes: {
+                    userId: req.user.id
                   }
                 }
-              )
-              res.status(200).json({ message: 'updated, from upvote' })
-            }
+              }
+            )
+            await Question.updateOne(
+              {
+                _id: req.params.questionId
+              },
+              {
+                $push: {
+                  votes: { userId: req.user.id, voteType: -1 }
+                }
+              }
+            )
+            res.status(200).json({ message: 'updated, from upvote' })
           }
         } else {
           await Question.updateOne(
@@ -142,7 +158,7 @@ module.exports = {
               }
             }
           )
-          res.status(200).json({ message: 'updated, new down vote' })
+          res.status(200).json({ message: 'updated, new downvote' })
         }
       } else {
         const err = new Error('404 Not Found')
