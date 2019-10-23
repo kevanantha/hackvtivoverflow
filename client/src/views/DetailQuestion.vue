@@ -55,20 +55,39 @@
           </div>
           <div class="col-11">
             <q-card-section style="padding-left: 0">
-              <div v-html="question.description"></div>
+              <div style="display: inline-block">
+                <div v-html="question.description"></div>
+              </div>
             </q-card-section>
 
-            <Tag v-for="(tag, i) in question.tags" :key="i" :tag="tag" />
+            <div style="display: flex; margin-bottom: 2rem">
+              <div>
+                <Tag v-for="(tag, i) in question.tags" :key="i" :tag="tag" />
+              </div>
+              <div style="margin-left: auto; margin-right: 1rem">
+                <q-btn
+                  size="15px"
+                  color="blue-1"
+                  textColor="blue"
+                  no-caps
+                  style="margin-right: 0.7rem"
+                  unelevated
+                >
+                  Asked by: {{ question.userId.name }}
+                </q-btn>
+              </div>
+            </div>
           </div>
         </div>
       </q-card>
     </div>
 
     <div>
-      <q-separator inset />
       <q-card flat>
-        <q-card-section style="padding-left: 0">
-          <h2>hello</h2>
+        <AnswersList v-if="question.answerId.length && !isLoading" :answers="question.answerId" />
+
+        <q-card-section style="">
+          <AnswerForm />
         </q-card-section>
       </q-card>
     </div>
@@ -79,11 +98,15 @@
 import { mapState, mapGetters } from 'vuex'
 
 import Tag from '@/components/Tag'
+import AnswersList from '@/components/AnswersList'
+import AnswerForm from '@/components/AnswerForm'
 
 export default {
   name: 'DetailQuestion',
   components: {
-    Tag
+    Tag,
+    AnswerForm,
+    AnswersList
   },
   computed: {
     ...mapState('questions', ['question', 'isLoading']),

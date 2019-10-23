@@ -31,6 +31,22 @@ const getters = {
       return false
     }
     return false
+  },
+  totalAnswers() {
+    if (state.question.answerId) {
+      if (state.question.answerId.length > 1) {
+        return state.question.answerId.length + ' answers'
+      } else {
+        return state.question.answerId.length + ' answer'
+      }
+    }
+    return 0
+  },
+  totalVotesAnswer() {
+    if (state.question.votes) {
+      return state.question.answerId.map(vote => vote.voteType).reduce((acc, curr) => acc + curr, 0)
+    }
+    return 0
   }
 }
 
@@ -93,7 +109,7 @@ const actions = {
       try {
         const { data } = await axios({
           method: 'patch',
-          url: `http://localhost:3000/questions/${payload.questionId}/upvote`,
+          url: `/questions/${payload.questionId}/upvote`,
           headers: {
             access_token: localStorage.getItem('token')
           }
@@ -109,11 +125,30 @@ const actions = {
       try {
         const { data } = await axios({
           method: 'patch',
-          url: `http://localhost:3000/questions/${payload.questionId}/downvote`,
+          url: `/questions/${payload.questionId}/downvote`,
           headers: {
             access_token: localStorage.getItem('token')
           }
         })
+        resolve()
+      } catch (err) {
+        reject(err)
+      }
+    })
+  },
+  answerSubmit({ commit }, payload) {
+    console.log(payload)
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { data } = await axios({
+          method: 'post',
+          url: `/questions/${payload.questionId}/answer/submit`,
+          headers: {
+            access_token: localStorage.getItem('token')
+          },
+          data: payload
+        })
+        console.log(data)
         resolve()
       } catch (err) {
         reject(err)

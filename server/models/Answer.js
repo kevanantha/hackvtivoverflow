@@ -22,3 +22,7 @@ const answerSchema = new Schema(
   },
   { versionKey: false, timestamps: true }
 )
+
+const Answer = model('Answer', answerSchema)
+
+module.exports = Answer

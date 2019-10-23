@@ -11,9 +11,6 @@
       />
 
       <q-editor v-model="description" min-height="5rem" />
-      <q-card flat bordered>
-        <q-card-section v-html="description" />
-      </q-card>
 
       <q-input v-model="tag" label="Tags" lazy-rules outlined dense @keyup.space="addTags" />
       <q-btn
@@ -53,6 +50,7 @@ export default {
       this.tag = null
     },
     onSubmit() {
+      this.loadingBtn = true
       this.$store
         .dispatch('questions/create', {
           title: this.title,
@@ -60,6 +58,7 @@ export default {
           tags: this.tags
         })
         .then(data => {
+          this.loadingBtn = false
           this.title = null
           this.description = null
           this.tags = []
@@ -73,6 +72,7 @@ export default {
           this.$router.push('/').catch(err => {})
         })
         .catch(err => {
+          this.loadingBtn = false
           this.title = null
           this.description = null
           this.tags = []

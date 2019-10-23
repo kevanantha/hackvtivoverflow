@@ -18,10 +18,12 @@
       </div>
       <div style="margin-left: auto; display: flex">
         <div style="margin-left: 1rem; color: grey; font-weight: bold">
-          <span>{{ question.votes.length }} votes</span>
+          <span v-if="question.votes.length > 1">{{ question.votes.length }} votes</span>
+          <span v-else>{{ question.votes.length }} vote</span>
         </div>
         <div style="margin-left: 1rem; color: grey; font-weight: bold">
-          <span>{{ question.answerId.length }} answers</span>
+          <span v-if="question.answerId.length > 1">{{ question.answerId.length }} answers</span>
+          <span v-else>{{ question.answerId.length }} answer</span>
         </div>
         <div style="margin-left: 1rem; color: grey; font-weight: bold">
           <span>{{ Math.floor(Math.random() * 100) }} views</span>
