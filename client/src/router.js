@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import DefaultLayout from './layouts/Default.vue'
 import Home from './views/Home.vue'
 import About from './views/About.vue'
 import LoginForm from './views/LoginForm.vue'
@@ -12,6 +11,7 @@ import DetailQuestion from './views/DetailQuestion.vue'
 import YourQuestions from './components/YourQuestions.vue'
 import YourAnswers from './components/YourAnswers.vue'
 import EditQuestion from './components/EditQuestion.vue'
+import EditAnswer from './components/EditAnswer.vue'
 
 Vue.use(Router)
 
@@ -52,6 +52,11 @@ export default new Router({
           path: '/users/:userId/answers',
           name: 'your answers',
           component: YourAnswers
+        },
+        {
+          path: '/users/:userId/answers/:answerId/edit',
+          name: 'edit answers',
+          component: EditAnswer
         }
       ]
     },

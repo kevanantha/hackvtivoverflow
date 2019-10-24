@@ -35,7 +35,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'AskQuestion',
+  name: 'EditQuestion',
   data() {
     return {
       title: '',

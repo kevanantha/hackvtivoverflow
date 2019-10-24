@@ -35,6 +35,13 @@
           style="cursor: pointer"
           name="arrow_drop_down"
         />
+        <div v-if="isOwner" style="margin-left: auto">
+          <router-link :to="answer | slugEdit">
+            <q-btn flat round>
+              <q-icon size="17px" color="primary" name="edit" />
+            </q-btn>
+          </router-link>
+        </div>
       </div>
       <div class="col-11">
         <q-card-section v-if="isMyAnswers && answer.question">
@@ -48,16 +55,6 @@
         <q-card-section style="">
           <div class="cursor-pointer">
             <div v-html="answer.body"></div>
-            <q-popup-edit v-model="body">
-              <!-- <template v-slot="{ initialValue, value, emitValue, validate, set, cancel }"> -->
-              <q-form @submit.prevent="onSubmit(answer._id)" class="q-gutter-md">
-                <q-editor v-model="body" min-height="5rem" />
-                <div>
-                  <q-btn :loading="loadingBtn" label="Submit" type="submit" color="primary" />
-                </div>
-              </q-form>
-              <!-- </template> -->
-            </q-popup-edit>
           </div>
         </q-card-section>
       </div>
@@ -75,13 +72,9 @@ export default {
   computed: {
     ...mapGetters('answers', ['isAldUpVote', 'isAldDownVote', 'total']),
     ...mapState('users', ['userId']),
-    body: {
-      get() {
-        return this.$store.state.answers.answer.body
-      },
-      set(value) {
-        this.$store.commit('answers/CHANGE_FORM_EDIT_VALUE_BODY', value)
-      }
+    isOwner() {
+      if (this.answer.userId == this.userId) return true
+      else return false
     }
   },
   data() {
@@ -97,6 +90,10 @@ export default {
     slug(v) {
       const title = v.title.toLowerCase().replace(/[^a-z0-9-]/g, '-')
       return `/questions/${v._id}/${title}`
+    },
+    slugEdit(v) {
+      console.log(v)
+      return `/users/${v.userId}/answers/${v._id}/edit`
     }
   },
   methods: {
@@ -135,38 +132,6 @@ export default {
           } else {
             this.$store.dispatch('answers/answersUser', this.$route.params)
           }
-        })
-        .catch(err => {
-          this.$q.notify({
-            color: 'negative',
-            textColor: 'white',
-            icon: 'report_problem',
-            position: 'top',
-            message: `${err.response.data}`
-          })
-        })
-    },
-    updateBody(body) {
-      this.$store.commit('answers/CHANGE_FORM_EDIT_VALUE_BODY', body)
-    },
-    onSubmit(id) {
-      this.loadingBtn = true
-      this.$store
-        .dispatch('answers/update', {
-          body: this.body,
-          answerId: id
-        })
-        .then(data => {
-          this.loadingBtn = false
-          //this.body = ''
-          this.$q.notify({
-            color: 'positive',
-            textColor: 'white',
-            icon: 'mood',
-            position: 'top',
-            message: `Success update answer`
-          })
-          this.$router.push('/').catch(err => {})
         })
         .catch(err => {
           this.$q.notify({
