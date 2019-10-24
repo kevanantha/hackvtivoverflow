@@ -2,6 +2,7 @@ const router = require('express').Router()
 const AnswerController = require('../controllers/AnswerController')
 const { authentication, authorizationAnswer } = require('../middlwares/auth')
 
+router.get('/', AnswerController.findAll)
 router.get('/:answerId', AnswerController.findOne)
 router.use(authentication)
 router.get('/:userId/myanswers', AnswerController.myAnswers)

@@ -1,6 +1,14 @@
 const Answer = require('../models/Answer')
 
 module.exports = {
+  async findAll(req, res, next) {
+    try {
+      const answers = await Answer.find()
+      res.status(200).json(answers)
+    } catch (err) {
+      next(err)
+    }
+  },
   async findOne(req, res, next) {
     try {
       const answer = await Answer.findOne({
