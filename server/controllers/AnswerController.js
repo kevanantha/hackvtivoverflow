@@ -1,17 +1,29 @@
 const Answer = require('../models/Answer')
 
 module.exports = {
+  async findOne(req, res, next) {
+    try {
+      const answer = await Answer.findOne({
+        _id: req.params.answerId
+      })
+      res.status(200).json(answer)
+    } catch (err) {
+      next(err)
+    }
+  },
   async upvote(req, res, next) {
     try {
-      const question = await Answer.findById(req.params.questionId)
-      if (Object.keys(question).length) {
-        const filterVote = question.votes.filter(q => q.userId == req.user.id)
+      const answer = await Answer.findById(req.params.answerId)
+      console.log(answer)
+      console.log(req.params)
+      if (Object.keys(answer).length) {
+        const filterVote = answer.votes.filter(q => q.userId == req.user.id)
         if (filterVote.length) {
           console.log(filterVote)
           if (filterVote[0].voteType == 1) {
             await Answer.updateOne(
               {
-                _id: req.params.questionId
+                _id: req.params.answerId
               },
               {
                 $pull: {
@@ -25,7 +37,7 @@ module.exports = {
           } else if (filterVote[0].voteType == -1) {
             await Answer.updateOne(
               {
-                _id: req.params.questionId
+                _id: req.params.answerId
               },
               {
                 $pull: {
@@ -37,7 +49,7 @@ module.exports = {
             )
             await Answer.updateOne(
               {
-                _id: req.params.questionId
+                _id: req.params.answerId
               },
               {
                 $push: {
@@ -50,7 +62,7 @@ module.exports = {
         } else {
           await Answer.updateOne(
             {
-              _id: req.params.questionId
+              _id: req.params.answerId
             },
             {
               $push: {
@@ -71,15 +83,15 @@ module.exports = {
   },
   async downvote(req, res, next) {
     try {
-      const question = await Answer.findById(req.params.questionId)
-      if (Object.keys(question).length) {
-        const filterVote = question.votes.filter(q => q.userId == req.user.id)
+      const answer = await Answer.findById(req.params.answerId)
+      if (Object.keys(answer).length) {
+        const filterVote = answer.votes.filter(q => q.userId == req.user.id)
         if (filterVote.length) {
           console.log(filterVote)
           if (filterVote[0].voteType == -1) {
             await Answer.updateOne(
               {
-                _id: req.params.questionId
+                _id: req.params.answerId
               },
               {
                 $pull: {
@@ -93,7 +105,7 @@ module.exports = {
           } else if (filterVote[0].voteType == 1) {
             await Answer.updateOne(
               {
-                _id: req.params.questionId
+                _id: req.params.answerId
               },
               {
                 $pull: {
@@ -105,7 +117,7 @@ module.exports = {
             )
             await Answer.updateOne(
               {
-                _id: req.params.questionId
+                _id: req.params.answerId
               },
               {
                 $push: {
@@ -118,7 +130,7 @@ module.exports = {
         } else {
           await Answer.updateOne(
             {
-              _id: req.params.questionId
+              _id: req.params.answerId
             },
             {
               $push: {
@@ -133,6 +145,36 @@ module.exports = {
         err.name = 'NotFound'
         next(err)
       }
+    } catch (err) {
+      next(err)
+    }
+  },
+  async myAnswers(req, res, next) {
+    try {
+      const answers = await Answer.find({
+        userId: req.params.userId
+      }).populate('question')
+      res.status(200).json(answers)
+    } catch (err) {
+      next(err)
+    }
+  },
+  async update(req, res, next) {
+    try {
+      const updated = await Answer.findOneAndUpdate(
+        {
+          _id: req.params.answerId
+        },
+        {
+          $set: {
+            body: req.body.body
+          }
+        }
+      )
+      console.log(req.params)
+      console.log(req.body)
+      // console.log(updated)
+      res.status(200).json()
     } catch (err) {
       next(err)
     }

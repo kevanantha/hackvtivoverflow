@@ -3,10 +3,18 @@
     <div style="text-align: center" v-if="isLoading">
       <h2>Loading...</h2>
     </div>
-    <div v-if="!isLoading && questions.length">
-      <h3>All Questions</h3>
+    <div v-if="!isLoading && !answers.length" style="text-align: center">
+      <h3>No Data</h3>
+    </div>
+    <div v-if="!isLoading && answers.length">
+      <h3>Your Answers</h3>
 
-      <QuestionItem v-for="question in questions" :key="question._id" :question="question" />
+      <AnswerItem
+        v-for="answer in answers"
+        :isMyAnswers="true"
+        :key="answer._id"
+        :answer="answer"
+      />
 
       <!-- <q-separator inset /> -->
     </div>
@@ -15,20 +23,20 @@
 
 <script>
 import { mapState } from 'vuex'
-import QuestionItem from '@/components/QuestionItem'
+import AnswerItem from '@/components/AnswerItem'
 
 export default {
-  name: 'HomeContainer',
+  name: 'YourAnswers',
   components: {
-    QuestionItem
+    AnswerItem
   },
   computed: {
-    ...mapState('questions', ['questions', 'isLoading'])
+    ...mapState('answers', ['answers', 'isLoading'])
   },
   mounted() {
     this.$q.loadingBar.start()
     this.$store
-      .dispatch('questions/findAll')
+      .dispatch('answers/answersUser', this.$route.params)
       .then(_ => {
         this.$q.loadingBar.stop()
       })

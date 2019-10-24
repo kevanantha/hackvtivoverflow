@@ -36,7 +36,7 @@
           <q-item-label>Profile</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item clickable tag="a" target="_blank" href="https://github.com/quasarframework/">
+      <q-item :to="yourQuestionsPath" exact>
         <q-item-section avatar>
           <q-icon name="help" />
         </q-item-section>
@@ -44,7 +44,7 @@
           <q-item-label>Your questions</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item clickable tag="a" target="_blank" href="https://chat.quasar.dev">
+      <q-item :to="yourAnswersPath" exact>
         <q-item-section avatar>
           <q-icon name="question_answer" />
         </q-item-section>
@@ -75,11 +75,22 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'Sidebar',
   data() {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop
+    }
+  },
+  computed: {
+    ...mapState('users', ['userId']),
+    yourQuestionsPath() {
+      return `/users/${this.userId}/questions`
+    },
+    yourAnswersPath() {
+      return `/users/${this.userId}/answers`
     }
   },
   methods: {

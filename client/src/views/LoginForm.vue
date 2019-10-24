@@ -70,7 +70,7 @@ export default {
             textColor: 'white',
             icon: 'report_problem',
             position: 'top',
-            message: `${err.response.data.join(', ')}`
+            message: `${err.response.data}`
           })
         })
     },

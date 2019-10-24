@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div v-if="isLoading">Loading...</div>
+    <div style="text-align: center" v-if="isLoading">
+      <h2>Loading...</h2>
+    </div>
 
     <div v-if="!isLoading">
       <q-card flat>
@@ -84,7 +86,10 @@
 
     <div>
       <q-card flat>
-        <AnswersList v-if="question.answerId.length && !isLoading" :answers="question.answerId" />
+        <AnswersList
+          v-if="question.answerId && question.answerId.length && !isLoading"
+          :answers="question.answerId"
+        />
 
         <q-card-section style="">
           <AnswerForm />

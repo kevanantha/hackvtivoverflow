@@ -6,6 +6,10 @@ const answerSchema = new Schema(
       type: String,
       required: [true, 'Body is required']
     },
+    question: {
+      type: Schema.Types.ObjectId,
+      ref: 'Question'
+    },
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User'

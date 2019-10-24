@@ -8,6 +8,8 @@ import '@quasar/extras/fontawesome-v5/fontawesome-v5.css'
 import {
   Quasar,
   QSpace,
+  QBtnDropdown,
+  QPopupEdit,
   QCard,
   QEditor,
   QForm,
@@ -21,6 +23,7 @@ import {
   QToolbar,
   QToolbarTitle,
   QBtn,
+  LoadingBar,
   QIcon,
   QCardSection,
   QList,
@@ -49,8 +52,11 @@ Vue.use(Quasar, {
     QForm,
     QEditor,
     QMenu,
+    QBtnDropdown,
+    QPopupEdit,
     QSpace,
     QInput,
+    LoadingBar,
     QHeader,
     QDrawer,
     QPageContainer,
@@ -68,6 +74,7 @@ Vue.use(Quasar, {
   directives: {},
   plugins: {
     Dialog,
-    Notify
+    Notify,
+    LoadingBar
   }
 })

@@ -9,6 +9,9 @@ import AskQuestion from './views/AskQuestion.vue'
 import HomeContainer from './components/HomeContainer.vue'
 import TagsContainer from './components/TagsContainer.vue'
 import DetailQuestion from './views/DetailQuestion.vue'
+import YourQuestions from './components/YourQuestions.vue'
+import YourAnswers from './components/YourAnswers.vue'
+import EditQuestion from './components/EditQuestion.vue'
 
 Vue.use(Router)
 
@@ -17,7 +20,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
+      // name: 'home',
       component: Home,
       children: [
         {
@@ -34,6 +37,21 @@ export default new Router({
           path: '/questions/:questionId/:questionTitle',
           name: 'question detail',
           component: DetailQuestion
+        },
+        {
+          path: '/questions/:questionId/:questionTitle/edit',
+          name: 'question edit',
+          component: EditQuestion
+        },
+        {
+          path: '/users/:userId/questions',
+          name: 'your questions',
+          component: YourQuestions
+        },
+        {
+          path: '/users/:userId/answers',
+          name: 'your answers',
+          component: YourAnswers
         }
       ]
     },

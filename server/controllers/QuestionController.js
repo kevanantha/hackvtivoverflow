@@ -38,6 +38,8 @@ module.exports = {
   },
   async upvote(req, res, next) {
     try {
+      console.log('*******************')
+      console.log(req.user)
       const question = await Question.findById(req.params.questionId)
       if (Object.keys(question).length) {
         const filterVote = question.votes.filter(q => q.userId == req.user.id)
@@ -177,6 +179,7 @@ module.exports = {
       console.log(req.body)
       const answerId = await Answer.create({
         body: req.body.body,
+        question: req.body.questionId,
         userId: req.user.id
       })
 
@@ -195,10 +198,42 @@ module.exports = {
       next(err)
     }
   },
+  async myQuestions(req, res, next) {
+    try {
+      const questions = await Question.find({
+        userId: req.params.userId
+      })
+      res.status(200).json(questions)
+    } catch (err) {
+      next(err)
+    }
+  },
+  async update(req, res, next) {
+    try {
+      console.log(req.body)
+      const updated = await Question.updateOne(
+        {
+          _id: req.params.questionId
+        },
+        {
+          title: req.body.title,
+          description: req.body.description,
+          tags: req.body.tags
+        }
+      )
+      console.log(updated)
+      res.status(200).json(updated)
+    } catch (err) {
+      next(err)
+    }
+  },
   async delete(req, res, next) {
     try {
       await Question.deleteOne({
         _id: req.params.questionId
+      })
+      await Answer.deleteOne({
+        question: req.params.questionId
       })
       res.status(204).json()
     } catch (err) {

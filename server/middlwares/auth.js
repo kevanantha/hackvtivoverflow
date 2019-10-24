@@ -1,5 +1,6 @@
 const { verifyToken } = require('../helpers/jwt')
 const Question = require('../models/Question')
+const Answer = require('../models/Answer')
 
 const authentication = (req, res, next) => {
   try {
@@ -29,7 +30,26 @@ const authorizationQuestion = (req, res, next) => {
   })
 }
 
+const authorizationAnswer = (req, res, next) => {
+  Answer.findById(req.params.answerId).then(answer => {
+    if (answer) {
+      if (answer.userId == req.user.id) {
+        next()
+      } else {
+        const err = new Error('Pesmission denied')
+        err.name = 'Unauthorized'
+        next(err)
+      }
+    } else {
+      const err = new Error('404 Not Found')
+      err.name = 'NotFound'
+      next(err)
+    }
+  })
+}
+
 module.exports = {
   authentication,
-  authorizationQuestion
+  authorizationQuestion,
+  authorizationAnswer
 }
