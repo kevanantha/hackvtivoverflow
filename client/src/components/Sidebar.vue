@@ -10,33 +10,33 @@
           <q-item-label>Home</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item to="/tags" exact>
+      <q-item to="/tags" disabled exact>
         <q-item-section avatar>
           <q-icon name="local_offer" />
         </q-item-section>
         <q-item-section>
-          <q-item-label>Tags</q-item-label>
+          <q-item-label>Tags (WIP)</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item to="/users" exact>
+      <q-item to="/users" disabled exact>
         <q-item-section avatar>
           <q-icon name="people" />
         </q-item-section>
         <q-item-section>
-          <q-item-label>Users</q-item-label>
+          <q-item-label>Users (WIP)</q-item-label>
         </q-item-section>
       </q-item>
 
       <q-item-label header>Dashboard</q-item-label>
-      <q-item clickable tag="a" target="_blank" href="https://quasar.dev">
+      <q-item disabled exact>
         <q-item-section avatar>
           <q-icon name="person" />
         </q-item-section>
         <q-item-section>
-          <q-item-label>Profile</q-item-label>
+          <q-item-label>Profile (WIP)</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item :to="yourQuestionsPath" exact>
+      <q-item v-if="isLogin" :to="yourQuestionsPath" exact>
         <q-item-section avatar>
           <q-icon name="help" />
         </q-item-section>
@@ -44,7 +44,7 @@
           <q-item-label>Your questions</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item :to="yourAnswersPath" exact>
+      <q-item v-if="isLogin" :to="yourAnswersPath" exact>
         <q-item-section avatar>
           <q-icon name="question_answer" />
         </q-item-section>
@@ -52,17 +52,17 @@
           <q-item-label>Your answers</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item clickable tag="a" target="_blank" href="https://forum.quasar.dev">
+      <q-item disabled exact>
         <q-item-section avatar>
           <q-icon name="settings_applications" />
         </q-item-section>
         <q-item-section>
-          <q-item-label>Settings</q-item-label>
+          <q-item-label>Settings (WIP)</q-item-label>
         </q-item-section>
       </q-item>
 
-      <q-item-label header>Actions</q-item-label>
-      <q-item clickable tag="a" @click="signout">
+      <q-item-label v-if="isLogin" header>Actions</q-item-label>
+      <q-item v-if="isLogin" clickable tag="a" @click="signout">
         <q-item-section avatar>
           <q-icon name="logout" />
         </q-item-section>
@@ -85,7 +85,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('users', ['userId']),
+    ...mapState('users', ['userId', 'isLogin']),
     yourQuestionsPath() {
       return `/users/${this.userId}/questions`
     },

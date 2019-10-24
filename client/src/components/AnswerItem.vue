@@ -92,7 +92,6 @@ export default {
       return `/questions/${v._id}/${title}`
     },
     slugEdit(v) {
-      console.log(v)
       return `/users/${v.userId}/answers/${v._id}/edit`
     }
   },
